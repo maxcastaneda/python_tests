@@ -32,7 +32,7 @@ for archivo, ruta in zip(archivos, rutas):
     openfile = open(ruta, "r")
     texto = openfile.read()    
     
-    patron = r"N\w{3}-\d{5}"
+    patron = r"N\D{3}-\d{5}"
     busqueda = re.findall(patron, texto)
     for match in busqueda:
         print(f"{archivo}\t\t\t{match}")
