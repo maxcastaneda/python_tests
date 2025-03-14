@@ -189,7 +189,7 @@ while ejecutar:
 
     if explotar:
         explotar_w+=0.2
-        explotar_h+=0.2
+        explotar_h+=0.1
         explotar_alpha-=2
         poner_explosion(explotar_x, explotar_y,explotar_w,explotar_h,explotar_alpha)
         explosioncount += 1
