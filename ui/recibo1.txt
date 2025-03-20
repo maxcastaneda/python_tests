@@ -1,0 +1,18 @@
+Antojitos Mexicanos "El burro alegre"
+Datos: 	N# - 9248		 19/03/2025 22:32
+*********************************************
+Item		Cantidad		Total
+-----------------------------------------------------------
+Chimichangas		 6		$9.9
+Indio		 12		$13.2
+Glorias		 6		$11.64
+*********************************************
+Comida: $9.9
+Bebida: $13.2
+Postre: $11.64
+*********************************************
+Subtotal: $34.74
+Impuestos: $5.56
+Total: $40.3
+Gracias, vuelva prontos
+

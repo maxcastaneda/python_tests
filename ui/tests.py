@@ -1,4 +1,7 @@
 from tkinter import *
+import random
+import datetime
+from tkinter import messagebox, filedialog
 
 precios_comida = [1.32, 1.65, 2.31, 3.22, 1.22, 1.99, 2.05, 2.65]
 precios_bebida = [0.25, 0.99, 1.21, 1.54, 1.08, 1.10, 2.00, 1.58]
@@ -60,6 +63,7 @@ def revisar_check():
             texto_postre[x].set("0")
         x += 1            
 
+# caclular total
 def total():
     sub_total_comida = 0
     sub_total_bebida = 0
@@ -67,9 +71,9 @@ def total():
     for x in range(len(lista_comidas)):
         sub_total_comida += float(texto_comida[x].get()) * precios_comida[x]
     for x in range(len(lista_bebidas)):
-        sub_total_bebida += float(texto_bebida[x].get()) * precios_comida[x]
+        sub_total_bebida += float(texto_bebida[x].get()) * precios_bebida[x]
     for x in range(len(lista_postres)):
-        sub_total_postre += float(texto_postre[x].get()) * precios_comida[x]
+        sub_total_postre += float(texto_postre[x].get()) * precios_postres[x]
 
     var_costo_comida.set(f"${round(sub_total_comida,2)}")
     var_costo_bebida.set(f"${round(sub_total_bebida,2)}")
@@ -83,6 +87,75 @@ def total():
 
     total = subtotal + impuestos
     var_costo_total.set(f"${round(total,2)}")
+
+def recibo():
+    total()
+    texto_recibo.delete(1.0, END)
+    num_recibo = f"N# - {random.randint(1000,9999)}"
+    fecha_recibo = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    texto_recibo.insert(END, "Antojitos Mexicanos \"El burro alegre\"\n")    
+    texto_recibo.insert(END, f"Datos: \t{num_recibo}\t\t {fecha_recibo}\n")
+    texto_recibo.insert(END, f"*"*45+"\n")
+    texto_recibo.insert(END, "Item\t\tCantidad\t\tTotal\n")
+    texto_recibo.insert(END, f"-"*59+"\n")
+    for x in range(len(lista_comidas)):
+        if int(texto_comida[x].get()) > 0:
+            texto_recibo.insert(INSERT, f"{lista_comidas[x]}\t\t {texto_comida[x].get()}\t\t${round(float(texto_comida[x].get()) * precios_comida[x],2)}\n")
+    for x in range(len(lista_bebidas)):
+        if int(texto_bebida[x].get()) > 0:
+            texto_recibo.insert(INSERT, f"{lista_bebidas[x]}\t\t {texto_bebida[x].get()}\t\t${round(float(texto_bebida[x].get()) * precios_bebida[x],2)}\n")
+    for x in range(len(lista_postres)):
+        if int(texto_postre[x].get()) > 0:
+            texto_recibo.insert(INSERT, f"{lista_postres[x]}\t\t {texto_postre[x].get()}\t\t${round(float(texto_postre[x].get()) * precios_postres[x],2)}\n")
+
+    texto_recibo.insert(END, f"*"*45+"\n")
+    texto_recibo.insert(INSERT, f"Comida: {var_costo_comida.get()}\n")
+    texto_recibo.insert(INSERT, f"Bebida: {var_costo_bebida.get()}\n")
+    texto_recibo.insert(INSERT, f"Postre: {var_costo_postre.get()}\n")
+    texto_recibo.insert(END, f"*"*45+"\n")
+    texto_recibo.insert(INSERT, f"Subtotal: {var_costo_subtotal.get()}\n")
+    texto_recibo.insert(INSERT, f"Impuestos: {var_costo_impuestos.get()}\n")
+    texto_recibo.insert(INSERT, f"Total: {var_costo_total.get()}\n")
+    texto_recibo.insert(INSERT, "Gracias, vuelva prontos\n")
+
+def guardar():
+    recibo()
+    info_recibo = texto_recibo.get(1.0, END)
+    archivo = filedialog.asksaveasfile(
+        mode="w",
+        defaultextension=".txt",
+        title="Guardar recibo", filetypes=(("Archivos de texto", "*.txt"),))
+    archivo.write(info_recibo)
+    archivo.close()
+    messagebox.showinfo("Guardado", "El recibo ha sido guardado con exito")
+
+def resetear():
+    for x in range(len(lista_comidas)):
+        texto_comida[x].set("0")
+    for x in range(len(lista_bebidas)):
+        texto_bebida[x].set("0")
+    for x in range(len(lista_postres)):
+        texto_postre[x].set("0")
+    for c in cuadros_comida:
+        c.config(state=DISABLED)
+    for c in cuadros_bebida:
+        c.config(state=DISABLED)
+    for c in cuadros_postre:
+        c.config(state=DISABLED)
+    for ck in variables_comida:
+        ck.set(0)
+    for ck in variables_bebida:
+        ck.set(0)
+    for ck in variables_postre:
+        ck.set(0)
+
+    var_costo_comida.set("")
+    var_costo_bebida.set("")
+    var_costo_postre.set("")
+    var_costo_subtotal.set("")
+    var_costo_impuestos.set("")
+    var_costo_total.set("")
+    texto_recibo.delete(1.0, END)
 
 application = Tk()
 
@@ -264,9 +337,12 @@ for boton in botones:
     botones_guardados.append(boton)
 
 botones_guardados[0].config(command=total)
+botones_guardados[1].config(command=recibo)
+botones_guardados[2].config(command=guardar)
+botones_guardados[3].config(command=resetear)
 
 # recibo
-texto_recibo = Text(panel_recibo, font=("Dubai Light",13), bd=1, width=40, height=10)
+texto_recibo = Text(panel_recibo, font=("Dubai Light",12), bd=1, width=40, height=10)
 texto_recibo.grid(row=0, column=0)
 
 # calculadora
