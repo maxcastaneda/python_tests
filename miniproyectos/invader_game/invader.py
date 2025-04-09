@@ -43,7 +43,7 @@ def poner_navecita(x, y):
 
 
 # enemigos
-total_enemigos = 10                 
+total_enemigos = 10           
 velocidad_enemigos = 0.3
 avance_enemigos = 20
 class Enemigo:
